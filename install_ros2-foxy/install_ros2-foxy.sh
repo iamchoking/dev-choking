@@ -62,16 +62,20 @@ colcon build --symlink-install
 echo "
 # ROS2 basics
 source /opt/ros/foxy/setup.bash
-source ~/dev_ws/install/local_setup.bash
+
+alias sd='source ~/dev_ws/install/local_setup.bash'
+# source ~/dev_ws/install/local_setup.bash
+
 source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 source /usr/share/colcon_cd/function/colcon_cd.sh
 
 export _colcon_cd_root=~/dev_ws
 
-export ROS_DOMAIN_ID=1
+export ROS_DOMAIN_ID=42
 export ROS_NAMESPACE=robot0
 
 # ROS2 command aliases
+alias rosdep_check='rosdep install -i --from-path ~/dev_ws/src --rosdistro ${ROS_DISTRO} -y'
 # alias cw='cd ~/dev_ws'
 # alias cs='cd ~/dev_ws/src'
 # alias ccd='colcon_cd'
