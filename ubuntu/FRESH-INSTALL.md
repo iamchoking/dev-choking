@@ -1,4 +1,4 @@
-# Fresh Install Directions for Linux Distros
+# Fresh Install Directions for Ubuntu
 ## Written for
 `Ubuntu` (`20.04`/`22.04`)
 
@@ -29,9 +29,9 @@ For directions, go [here](./GIT-SSH.md)
 
 ### 4. Clone `dev-choking` (this repo) to your home
 ```bash
-cd ~ && git clone https://github.com/iamchoking/dev-choking.git && cd ./dev-choking/linux && find . -type f -regex '.*\.sh$' -exec chmod +x {} \ && chmod +x linux_raisimCheckMyMachine;
+cd ~ && git clone https://github.com/iamchoking/dev-choking.git && cd ./dev-choking/ubuntu && find . -type f -regex '.*\.sh$' -exec chmod +x {} \ && chmod +x linux_raisimCheckMyMachine;
 ```
-We will operate in this directory (`dev-choking/linux`) henceforth
+We will operate in this directory (`dev-choking/ubuntu`) henceforth
 
 ### 5. Set up bash aliases
 **WARNING: this bash alias is highly catored to myself.**
