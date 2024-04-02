@@ -1,5 +1,7 @@
+#!/bin/bash
+
 echo "
-# user Aliases
+# user Aliases (from [dev-choking])
 
 # alias rm='rm -rf' # can you handle this power?
 alias eb='gedit ~/.bashrc' 

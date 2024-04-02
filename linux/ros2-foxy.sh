@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # ros2 foxy installation
 # Many thanks to the development repository by WeeBee ([link](https://github.com/finani/WeeBee/blob/master/ros_foxy_install/install_ros2_foxy_focal.sh))
 # Tested on:
@@ -102,5 +104,5 @@ alias rosdep_check='rosdep install -i --from-path ~/dev_ws/src --rosdistro ${ROS
 
 source ~/.bashrc
 
-echo "ros2-foxy install finished"
-echo "make sure to change ROS_DOMAIN_ID and ROS_NAMESPACE correctly in .bashrc"
+echo "<dev-choking> ros2-foxy install finished"
+echo "[INFO] make sure to change ROS_DOMAIN_ID and ROS_NAMESPACE correctly in .bashrc"
