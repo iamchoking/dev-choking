@@ -1,3 +1,8 @@
+# ros2 foxy installation
+# Many thanks to the development repository by WeeBee ([link](https://github.com/finani/WeeBee/blob/master/ros_foxy_install/install_ros2_foxy_focal.sh))
+# Tested on:
+# Ubuntu 20.04 LTS (focal fossa)
+
 # Set locale
 
 locale  # check for UTF-8

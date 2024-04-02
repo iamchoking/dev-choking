@@ -11,4 +11,7 @@ alias xo='xdg-open'
 alias gs='git status'  
 alias gp='git pull'
 " >> ~/.bashrc
+
+echo "<dev-choking> Added .bashrc aliases"
+
 source ~/.bashrc
