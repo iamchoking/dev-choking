@@ -29,7 +29,7 @@ For directions, go [here](./GIT-SSH.md)
 
 ### 4. Clone `dev-choking` (this repo) to your home
 ```bash
-cd ~ && git clone https://github.com/iamchoking/dev-choking.git && cd ./dev-choking/ubuntu && find . -type f -regex '.*\.sh$' -exec chmod +x {} \ && chmod +x linux_raisimCheckMyMachine;
+cd ~ && git clone https://github.com/iamchoking/dev-choking.git && cd ./dev-choking/ubuntu && find . -type f -regex '.*\.sh$' -exec chmod +x {} \; && chmod +x linux_raisimCheckMyMachine;
 ```
 We will operate in this directory (`dev-choking/ubuntu`) henceforth
 
