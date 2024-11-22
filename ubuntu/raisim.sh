@@ -48,14 +48,14 @@ make -j
 # setting important env.variables in bashrc
 echo "
 # raisim environment varaibles
-RAISIMLIB_DIR="~/raisim_ws/raisimLib"
-LOCAL_INSTALL="TODO"
-RAISIM_PREFIX_PATH="~/raisim_ws/raisimLib/raisim/linux"
+RAISIMLIB_DIR=\"~/raisim_ws/raisimLib\"
+LOCAL_INSTALL=\"TODO\"
+RAISIM_PREFIX_PATH=\"~/raisim_ws/raisimLib/raisim/linux\"
 # location of config files (for_cmake)
-raisim_DIR_cmake="~/raisim_ws/raisimLib/raisim/linux/lib/cmake/raisim"
+raisim_DIR_cmake=\"~/raisim_ws/raisimLib/raisim/linux/lib/cmake/raisim\"
 
 # raisim command aliases
-alias raisim_monitor="~/raisim_ws/raisimLib/raisimUnity/linux/raisimUnity.x86_64 & htop"
+alias raisim_monitor='~/raisim_ws/raisimLib/raisimUnity/linux/raisimUnity.x86_64 & htop'
 " >> ~/.bashrc
 
 source ~/.bashrc

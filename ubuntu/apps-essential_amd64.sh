@@ -6,6 +6,7 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt install ./google-chrome*.deb
 
 echo "<dev-choking> Installed chrome"
+rm google-chrome-*.deb
 
 # VS Code
 sudo apt install software-properties-common apt-transport-https wget -y
