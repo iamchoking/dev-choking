@@ -70,6 +70,15 @@ Finally,
 ```
 ./raisim.sh
 ```
+
+Now, setup the environment for ```raisimGymTorch```
+```
+./raisim-gym-torch-env.sh
+```
+**Note: This script is very unstable. If this script fails, look into its source and [this page](https://github.com/5sik/Linux-setting) for debugging**
+
+Alternatively, you can try looking into YouTube tutorials ([linux](https://youtu.be/0yj61G_ge-0), [windows](https://youtu.be/RlseqQPEo_4)).
+
 #### b. `ros2`
 *last updated 2021-11-18*
 ```

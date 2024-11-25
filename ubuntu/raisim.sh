@@ -18,7 +18,8 @@ sudo apt install -y \
   libyaml-cpp-dev \
   build-essential\
   htop\
-  cmake
+  cmake\
+  gcc
 
 # sudo snap install cmake --classic
 # sudo snap install clion --classic
