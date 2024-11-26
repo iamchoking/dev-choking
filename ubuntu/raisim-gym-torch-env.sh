@@ -121,6 +121,15 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
 cd ~/raisim_ws/raisimLib/raisimGymTorch
 conda activate raisim && python setup.py develop
 
+# adding user aliases to bashrc
+echo "
+
+# raisimGymTorch aliases (from [dev-choking])
+alias car='conda activate raisim'
+alias setup='python setup.py develop --CMAKE_PREFIX_PATH \$RAISIM_PREFIX_PATH'
+
+" >> ~/.bashrc
+
 # running the builtin example
 echo "<dev-choking> running example. Exit to finish installation"
 echo "(run raisim_monitor/nvtop in another terminal)"
