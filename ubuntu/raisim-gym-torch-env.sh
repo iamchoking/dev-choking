@@ -51,7 +51,13 @@ fi
 # other (non-python) tools (most should have been done with [raisim.sh])
 sudo apt update 
 sudo apt install -y git terminator libeigen3-dev doxygen mercurial valgrind liburdfdom-dev curl minizip ffmpeg libyaml-cpp-dev neofetch
+
+# for monitoring gpu performance
 sudo snap install nvtop
+
+# for viewing raisimUnity recordings
+sudo snap install smplayer
+
 # (optional) Jetbrains IDE's
 # sudo snap install cmake --classic
 # sudo snap install rider --classic 
