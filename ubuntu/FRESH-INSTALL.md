@@ -2,60 +2,83 @@
 ## Written for
 `Ubuntu` (`20.04`/`22.04`)
 
-### 1. update / upgrade `apt`
-```bash
-sudo apt update
-sudo apt upgrade -y
-```
+### 0. Install git
 
-### 2. install `terminator`
-```bash
-sudo apt install terminator
-```
-
-### 3. install and configure `git`
 ```bash
 sudo apt-get install git-all
 ```
-* *This takes care of most basic depenencies!*      
-```bash
-git config --global user.name <your username>
-git config --global user.email <your email>
-```
-#### (Optional) Generate/add an ssh key for the local machine
-*This enables accessing github repos through `ssh`* (solves the `git@github.com: Permission denied (publickey)` problem, etc.)*.
 
-For directions, go [here](./GIT-SSH.md)
-
-### 4. Clone `dev-choking` (this repo) to your home
+### 1. Clone `dev-choking` (this repo) to your home
+(+ Give appropriate ```chmod``` permissions)
 ```bash
 cd ~ && git clone https://github.com/iamchoking/dev-choking.git && cd ./dev-choking/ubuntu && find . -type f -regex '.*\.sh$' -exec chmod +x {} \; && chmod +x linux_raisimCheckMyMachine;
 ```
 We will operate in this directory (`dev-choking/ubuntu`) henceforth
 
-### 5. Set up bash aliases
+### 2. install basic dependencies and aliases
+
+#### Set up user alises
+
 **WARNING: this bash alias is highly catored to myself.**
 ```
 ./user-alias.sh
 ```
-***
-### 6. (Optional) Install Essential Apps
+
+#### Basic apps / dependencies
+
+```bash
+./ubuntu-basic.sh
+```
+
+* update / upgrade apt
+* install terminator
+* configures git
+* installs ```gh``` (git CLI)
+
+***TODO: pass ```user.name``` and ```user.email``` as arguments***
+
+After this part, close and re-open the terminal (should open ```terminator```)
+
+### 3. (Optional) Generate/add an ssh key for the local machine
+*This enables accessing github repos through `ssh`* (solves the `git@github.com: Permission denied (publickey)` problem, etc.)*.
+
+First, try:
+```bash
+gh auth login
+```
+
+And choose `SSH` as the ***preferred protocol for Git operations***
+
+Check if the key was successfully added with
+```bash
+ssh git@github.com
+```
+You should get a message ending with `Hi (user)! You've successfully authenticated, ...`
+
+To try manually adding an ssh key, go [here](./GIT-SSH.md)
+
+### 4. (Optional) Install Essential Apps
 *You can go into `apps-essential.sh` and comment out apps that are not needed.*
 **WARNING: Check your cpu architecture! (`amd64`, etc.)**
 
-`amd64` *(installs vscode, chrome)*
 ```
 ./apps-essential_amd64.sh
 ```
+
+`_amd64` installs:
+* vscode
+* chrome
+
 TODO: other distros
+
 ***
-### 7. Install Accessory Apps
+### 5. Install Accessory Apps
 Now is a great time to install other accessory apps such as:
 * Spotify (Ubuntu Software)
 * Clion (If you are planning on using `raisimGymTorch`)
 TODO: shell script for accessory apps
 ***
-### 8. Installing important applications
+### 6. Installing important applications
 Now, install important apps / API's into your computer
 #### a. `raisim`  / `raisimGymTorch`
 *last updated 2024-04-02*

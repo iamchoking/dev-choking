@@ -1,4 +1,4 @@
-## Generate/add an ssh key for the local machine
+## Manually Generate/add an ssh key for the local machine
 *This enables accessing github repos through `ssh`* (solves the `git@github.com: Permission denied (publickey)` problem, etc.)*.
 
 *Directions written from [github ssh](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)*
@@ -9,9 +9,8 @@ Check your GitHub ssh keys [here](https://github.com/settings/keys)
 ```bash
 sudo apt update && sudo apt install gh && gh auth login
 ```
-TODO: try the "add ssh key" option when choosing ssh as preferred operating protocol
 
-Add `ssh-key` to GitHub CLI
+## Manually Add `ssh-key` to GitHub CLI
 ```
 gh auth refresh -h github.com -s admin:public_key
 ```
