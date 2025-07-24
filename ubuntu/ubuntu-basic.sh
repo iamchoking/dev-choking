@@ -7,7 +7,7 @@ sudo apt upgrade -y
 echo '<dev-choking> apt update / upgrade complete'
 
 ### 2. install `terminator`
-sudo apt install terminator
+sudo apt install terminator htop gedit 
 
 echo '<dev-choking> installed terminator'
 
