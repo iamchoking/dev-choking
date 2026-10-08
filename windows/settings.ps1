@@ -490,12 +490,13 @@ function Invoke-Settings {
     $script:manualSteps = New-Object 'System.Collections.Generic.List[string]'
     Write-Host '[dev-choking] Checking Windows setup prerequisites...'
     Assert-Prerequisites
+    # Disable AC sleep/display timeouts before downloads or Windows servicing.
+    Set-PowerPreferences
     Uninstall-OneDrive
     Install-EnglishDisplayLanguage
     Set-DesktopPreferences
     Set-VSCodeContextMenu -SkipIfMissing
     Set-HardwareClockUtc
-    Set-PowerPreferences
     Set-LanguageAndRegion
     Set-PrinterDefaults
     Set-WordDefaults

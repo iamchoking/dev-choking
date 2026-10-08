@@ -114,6 +114,8 @@ settings.cmd
 `settings_win10.ps1` and `settings_win11.ps1`, plus `vscode-context-menu.ps1`.
 Keep these files together.
 Stay online while it downloads the language resources and O&O ShutUp10.
+Immediately after checking prerequisites, it sets the plugged-in sleep and screen
+timeouts to **Never**, before removing OneDrive or installing language resources.
 
 On **Windows 10**, if the English (United States) display-language pack is missing,
 the script opens **Settings > Time & Language > Language**. Add **English (United

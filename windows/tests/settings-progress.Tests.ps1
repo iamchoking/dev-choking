@@ -9,6 +9,54 @@ function Assert-Condition {
     if (-not $Condition) { throw $Message }
 }
 
+foreach ($case in @('ready', 'sleep-error', 'screen-error', 'prerequisite-error')) {
+    & {
+        . $setupScript
+        $script:sleepDisabled = $false
+        $script:screenDisabled = $false
+        $script:languageCalls = 0
+        $script:powerCalls = 0
+        function Assert-Prerequisites {
+            if ($case -eq 'prerequisite-error') { throw 'Simulated prerequisite failure' }
+            $script:isWindows11 = $true
+        }
+        function Set-Windows11PowerPreferences { }
+        function powercfg.exe {
+            $script:powerCalls++
+            $global:LASTEXITCODE = 0
+            if ($args[1] -eq 'standby-timeout-ac') {
+                if ($case -eq 'sleep-error') { $global:LASTEXITCODE = 1 }
+                else { $script:sleepDisabled = $true }
+            } elseif ($args[1] -eq 'monitor-timeout-ac') {
+                if ($case -eq 'screen-error') { $global:LASTEXITCODE = 1 }
+                else { $script:screenDisabled = $true }
+            } else { throw "Unexpected power command: $args" }
+        }
+        function Uninstall-OneDrive {
+            Assert-Condition ($script:sleepDisabled -and $script:screenDisabled) 'App removal started before AC timeouts were disabled'
+        }
+        function Install-EnglishDisplayLanguage {
+            Assert-Condition ($script:sleepDisabled -and $script:screenDisabled) 'Language installation could suspend while waiting'
+            $script:languageCalls++
+        }
+        function Set-DesktopPreferences { }
+        function Set-VSCodeContextMenu { param([switch]$SkipIfMissing) }
+        function Set-HardwareClockUtc { }
+        function Set-LanguageAndRegion { }
+        function Set-PrinterDefaults { }
+        function Set-WordDefaults { }
+        function Open-ShutUp10 { }
+        $failure = $null
+        try { Invoke-Settings *> $null } catch { $failure = $_ }
+        Assert-Condition (($null -ne $failure) -eq ($case -ne 'ready')) "Wrong setup result: $case"
+        $expectedLanguageCalls = if ($case -eq 'ready') { 1 } else { 0 }
+        Assert-Condition ($script:languageCalls -eq $expectedLanguageCalls) "Unsafe language download attempt: $case"
+        $expectedPowerCalls = if ($case -eq 'prerequisite-error') { 0 } elseif ($case -eq 'sleep-error') { 1 } else { 2 }
+        Assert-Condition ($script:powerCalls -eq $expectedPowerCalls) "Unexpected power changes: $case"
+        Write-Host "PASS: setup protects downloads against sleep and screen timeouts ($case)."
+    }
+}
+
 $job = Start-Job -ScriptBlock { Start-Sleep -Seconds 2; 'Simulated installed resources' }
 $jobId = $job.InstanceId
 $messages = @(Wait-SettingsJob -Job $job -Activity 'test download' -HeartbeatSeconds 1 6>&1) | Out-String
