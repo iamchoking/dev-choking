@@ -3,6 +3,18 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'vscode-context-menu.ps1')
 
+function Set-GitIdentity {
+    if (-not (Get-Command git.exe -CommandType Application -ErrorAction SilentlyContinue)) {
+        throw 'Git is unavailable. Install Git for Windows, then reopen CMD and retry.'
+    }
+    # Match the personal identity configured by ubuntu/ubuntu-basic.sh.
+    & git.exe config --global user.name 'iamchoking'
+    if ($LASTEXITCODE -ne 0) { throw "Could not set Git user.name (exit $LASTEXITCODE)." }
+    & git.exe config --global user.email 'iamchoking247@gmail.com'
+    if ($LASTEXITCODE -ne 0) { throw "Could not set Git user.email (exit $LASTEXITCODE)." }
+    Write-Host '[dev-choking] Git identity: iamchoking <iamchoking247@gmail.com>.'
+}
+
 function Get-EssentialApps {
     [pscustomobject]@{
         Id = 'Microsoft.VisualStudioCode'
@@ -143,6 +155,7 @@ function Install-EssentialApp {
 }
 
 function Install-EssentialApps {
+    Set-GitIdentity
     foreach ($app in (Get-EssentialApps)) { Install-EssentialApp $app }
     Write-Host '[dev-choking] VS Code, Chrome, and Google Drive for desktop are installed.'
     Write-Host '[dev-choking] Open Google Drive and sign in to configure synchronization.'

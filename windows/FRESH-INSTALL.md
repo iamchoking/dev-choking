@@ -63,6 +63,9 @@ for desktop** (`Google.GoogleDrive`) using `winget`. It reruns the VS Code insta
 to apply its context-menu options, and skips Chrome and Google Drive when already
 installed. Open Google Drive afterward and sign in to configure synchronization.
 
+It also sets Git's global commit identity to `iamchoking`
+(`iamchoking247@gmail.com`), matching `ubuntu/ubuntu-basic.sh`.
+
 Keep `apps-essential_amd64.cmd`, `apps-essential_amd64.ps1`, and
 `vscode-context-menu.ps1` together. Before
 downloading Chrome or Google Drive, the helper checks Windows installation records,
