@@ -44,6 +44,38 @@ GRUB Customizer installation has moved there from `ubuntu-basic.sh`.
 
 After this part, close and re-open the terminal (should open ```terminator```)
 
+#### Korean / English input (Ubuntu 24.04 GNOME)
+
+From a terminal in your GNOME desktop, run as your normal user:
+
+```bash
+bash ./setup-korean-input.sh
+```
+
+This automates the [Korean input setup guide](https://andrewpage.tistory.com/390):
+install Korean language support, fonts, and `ibus-hangul`; select IBus; and set
+the input source to **Korean (Hangul)** (`ibus`, `hangul`). It replaces the
+existing input source list with Hangul, which supports both Korean and English.
+Your desktop display language stays unchanged.
+
+Log out and back in, or reboot, after it completes. In a text editor, press
+**Shift+Space** or the **한/영** key to switch between Korean and English.
+The engine starts in English mode. The script saves previous settings and prints
+a `bash .../restore.sh` command to undo its configuration; installed packages remain.
+Log out and back in after restoring, too.
+
+To also use Right Alt for the toggle:
+
+```bash
+bash ./setup-korean-input.sh --switch-keys 'Hangul,Shift+space,Alt_R'
+```
+
+`Alt_R` applies when Right Alt emits that keysym; some keyboards already emit
+`Hangul`, while layouts using AltGr may emit a different keysym.
+Use `--skip-install` to reconfigure an existing installation without running APT.
+If `im-config` reports a custom `~/.xinputrc`, edit that file to select IBus or
+use the printed restore command; the script does not overwrite a custom file.
+
 ### 3. (Optional) Generate/add an ssh key for the local machine
 *This enables accessing github repos through `ssh`* (solves the `git@github.com: Permission denied (publickey)` problem, etc.)*.
 
