@@ -116,6 +116,7 @@ Keep these files together.
 Stay online while it downloads the language resources and O&O ShutUp10.
 Immediately after checking prerequisites, it sets the plugged-in sleep and screen
 timeouts to **Never**, before removing OneDrive or installing language resources.
+It also disables Windows Fast Startup on both Windows 10 and Windows 11.
 
 On **Windows 10**, if the English (United States) display-language pack is missing,
 the script opens **Settings > Time & Language > Language**. Add **English (United
@@ -159,6 +160,8 @@ The script configures:
   `powercfg /change standby-timeout-ac 0` on the selected power plan.
 * **Never turn off the screen when plugged in**, using
   `powercfg /change monitor-timeout-ac 0` on the selected power plan.
+* **Fast Startup disabled** (`HiberbootEnabled=0`) on Windows 10 and Windows 11,
+  so shutdown does not preserve the Windows kernel through a hybrid boot.
 * **Open with Code** in the classic context menus for files, folders, folder
   backgrounds, and drives when VS Code is installed.
 * **English (United States)** for Windows display language, app language preference,

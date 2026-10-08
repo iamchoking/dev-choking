@@ -102,6 +102,17 @@ function Set-HardwareClockUtc {
     Set-RegistryValue 'HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation' 'RealTimeIsUniversal' 1
 }
 
+function Disable-FastStartup {
+    Write-Host '[dev-choking] Disabling Windows Fast Startup...'
+    $power = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power'
+    Set-RegistryValue $power 'HiberbootEnabled' 0
+    $key = Get-Item -LiteralPath $power
+    if ($key.GetValue('HiberbootEnabled') -ne 0 -or
+        $key.GetValueKind('HiberbootEnabled') -ne [Microsoft.Win32.RegistryValueKind]::DWord) {
+        throw 'Windows Fast Startup could not be verified as disabled.'
+    }
+}
+
 function Set-PowerPreferences {
     Write-Host '[dev-choking] Setting power modes...'
     try {
@@ -492,6 +503,7 @@ function Invoke-Settings {
     Assert-Prerequisites
     # Disable AC sleep/display timeouts before downloads or Windows servicing.
     Set-PowerPreferences
+    Disable-FastStartup
     Uninstall-OneDrive
     Install-EnglishDisplayLanguage
     Set-DesktopPreferences

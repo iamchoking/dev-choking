@@ -21,6 +21,12 @@ There is no additional startup task or forced resynchronization routine.
 
 This is included in the settings script on both Windows 10 and Windows 11.
 
+The script also disables **Windows Fast Startup** on both versions by setting
+`HiberbootEnabled=0` under
+`HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Power`.
+Restart Windows once after setup before switching to Ubuntu.
+See [Microsoft's Fast Startup registry setting](https://learn.microsoft.com/en-us/windows/configuration/unified-write-filter/hibernate-once-resume-many-horm).
+
 ## Ubuntu's hardware-clock convention
 
 Ubuntu should use its default UTC hardware clock. In Ubuntu, `timedatectl status`

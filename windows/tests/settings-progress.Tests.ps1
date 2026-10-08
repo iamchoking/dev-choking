@@ -9,18 +9,22 @@ function Assert-Condition {
     if (-not $Condition) { throw $Message }
 }
 
+foreach ($windows11 in @($false, $true)) {
 foreach ($case in @('ready', 'sleep-error', 'screen-error', 'prerequisite-error')) {
     & {
         . $setupScript
         $script:sleepDisabled = $false
         $script:screenDisabled = $false
+        $script:fastStartupDisabled = $false
         $script:languageCalls = 0
         $script:powerCalls = 0
         function Assert-Prerequisites {
             if ($case -eq 'prerequisite-error') { throw 'Simulated prerequisite failure' }
-            $script:isWindows11 = $true
+            $script:isWindows11 = $windows11
         }
+        function Set-Windows10PowerPreferences { }
         function Set-Windows11PowerPreferences { }
+        function Disable-FastStartup { $script:fastStartupDisabled = $true }
         function powercfg.exe {
             $script:powerCalls++
             $global:LASTEXITCODE = 0
@@ -34,9 +38,11 @@ foreach ($case in @('ready', 'sleep-error', 'screen-error', 'prerequisite-error'
         }
         function Uninstall-OneDrive {
             Assert-Condition ($script:sleepDisabled -and $script:screenDisabled) 'App removal started before AC timeouts were disabled'
+            Assert-Condition $script:fastStartupDisabled 'App removal started before Fast Startup was disabled'
         }
         function Install-EnglishDisplayLanguage {
             Assert-Condition ($script:sleepDisabled -and $script:screenDisabled) 'Language installation could suspend while waiting'
+            Assert-Condition $script:fastStartupDisabled 'Language installation started before Fast Startup was disabled'
             $script:languageCalls++
         }
         function Set-DesktopPreferences { }
@@ -53,8 +59,10 @@ foreach ($case in @('ready', 'sleep-error', 'screen-error', 'prerequisite-error'
         Assert-Condition ($script:languageCalls -eq $expectedLanguageCalls) "Unsafe language download attempt: $case"
         $expectedPowerCalls = if ($case -eq 'prerequisite-error') { 0 } elseif ($case -eq 'sleep-error') { 1 } else { 2 }
         Assert-Condition ($script:powerCalls -eq $expectedPowerCalls) "Unexpected power changes: $case"
-        Write-Host "PASS: setup protects downloads against sleep and screen timeouts ($case)."
+        $version = if ($windows11) { 'Windows 11' } else { 'Windows 10' }
+        Write-Host "PASS: $version sets power timeouts and disables Fast Startup before downloads ($case)."
     }
+}
 }
 
 $job = Start-Job -ScriptBlock { Start-Sleep -Seconds 2; 'Simulated installed resources' }
