@@ -1,4 +1,8 @@
-# Windows + Ubuntu dual boot
+# Windows + Ubuntu dual boot: Ubuntu setup
+
+Windows clock handling is already included in `windows/settings.cmd` during normal
+Windows setup. No additional Windows-side dual-boot step is needed; see the
+[Windows notes](WINDOWS.md).
 
 ## Setup in Ubuntu
 

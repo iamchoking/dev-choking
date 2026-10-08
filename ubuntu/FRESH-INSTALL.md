@@ -5,7 +5,7 @@
 ### 0. Install git
 
 ```bash
-sudo apt-get install git-all
+sudo apt-get install git-all -y
 ```
 
 ### 1. Clone `dev-choking` (this repo) to your home
@@ -35,7 +35,9 @@ We will operate in this directory (`dev-choking/ubuntu`) henceforth
 * configures git
 * installs ```gh``` (git CLI)
 
-For Windows + Ubuntu dual boot, follow [the dedicated dual-boot guide](../dual-boot/README.md).
+For Windows + Ubuntu dual boot, follow [the Ubuntu dual-boot guide](../dual-boot/UBUNTU.md)
+and see the [Windows clock notes](../dual-boot/WINDOWS.md). Windows clock handling
+is already included in the normal Windows settings script.
 GRUB Customizer installation has moved there from `ubuntu-basic.sh`.
 
 ***TODO: pass ```user.name``` and ```user.email``` as arguments***

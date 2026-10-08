@@ -9,7 +9,7 @@ echo '<dev-choking> apt update / upgrade complete'
 ### 2. install essential apps
 sudo apt install terminator htop gedit -y
 
-# GRUB Customizer and dual-boot setup live in ../dual-boot/README.md.
+# GRUB Customizer and dual-boot setup live in ../dual-boot/UBUNTU.md.
 
 echo '<dev-choking> installed essential apps'
 
