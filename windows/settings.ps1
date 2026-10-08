@@ -116,12 +116,19 @@ function Set-PowerPreferences {
         $script:manualSteps.Add('Review AC/battery power modes for this device.')
     }
     Set-PluggedInSleepTimeout
+    Set-PluggedInScreenTimeout
 }
 
 function Set-PluggedInSleepTimeout {
     Write-Host '[dev-choking] Setting plugged-in automatic sleep to Never...'
     & powercfg.exe /change standby-timeout-ac 0
     if ($LASTEXITCODE -ne 0) { throw "Setting plugged-in sleep to Never failed with exit code $LASTEXITCODE." }
+}
+
+function Set-PluggedInScreenTimeout {
+    Write-Host '[dev-choking] Setting plugged-in screen timeout to Never...'
+    & powercfg.exe /change monitor-timeout-ac 0
+    if ($LASTEXITCODE -ne 0) { throw "Setting plugged-in screen timeout to Never failed with exit code $LASTEXITCODE." }
 }
 
 function Set-UserLocaleFormat {

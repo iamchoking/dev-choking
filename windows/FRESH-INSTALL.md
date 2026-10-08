@@ -155,6 +155,8 @@ The script configures:
   Hardware that rejects a power setting is reported for manual adjustment.
 * **Never automatically sleep when plugged in**, using
   `powercfg /change standby-timeout-ac 0` on the selected power plan.
+* **Never turn off the screen when plugged in**, using
+  `powercfg /change monitor-timeout-ac 0` on the selected power plan.
 * **Open with Code** in the classic context menus for files, folders, folder
   backgrounds, and drives when VS Code is installed.
 * **English (United States)** for Windows display language, app language preference,
