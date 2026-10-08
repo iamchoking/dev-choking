@@ -102,6 +102,17 @@ function Set-HardwareClockUtc {
     Set-RegistryValue 'HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation' 'RealTimeIsUniversal' 1
 }
 
+function Disable-FastStartup {
+    Write-Host '[dev-choking] Disabling Windows Fast Startup...'
+    $power = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power'
+    Set-RegistryValue $power 'HiberbootEnabled' 0
+    $key = Get-Item -LiteralPath $power
+    if ($key.GetValue('HiberbootEnabled') -ne 0 -or
+        $key.GetValueKind('HiberbootEnabled') -ne [Microsoft.Win32.RegistryValueKind]::DWord) {
+        throw 'Windows Fast Startup could not be verified as disabled.'
+    }
+}
+
 function Set-PowerPreferences {
     Write-Host '[dev-choking] Setting power modes...'
     try {
@@ -116,12 +127,19 @@ function Set-PowerPreferences {
         $script:manualSteps.Add('Review AC/battery power modes for this device.')
     }
     Set-PluggedInSleepTimeout
+    Set-PluggedInScreenTimeout
 }
 
 function Set-PluggedInSleepTimeout {
     Write-Host '[dev-choking] Setting plugged-in automatic sleep to Never...'
     & powercfg.exe /change standby-timeout-ac 0
     if ($LASTEXITCODE -ne 0) { throw "Setting plugged-in sleep to Never failed with exit code $LASTEXITCODE." }
+}
+
+function Set-PluggedInScreenTimeout {
+    Write-Host '[dev-choking] Setting plugged-in screen timeout to Never...'
+    & powercfg.exe /change monitor-timeout-ac 0
+    if ($LASTEXITCODE -ne 0) { throw "Setting plugged-in screen timeout to Never failed with exit code $LASTEXITCODE." }
 }
 
 function Set-UserLocaleFormat {
@@ -483,12 +501,14 @@ function Invoke-Settings {
     $script:manualSteps = New-Object 'System.Collections.Generic.List[string]'
     Write-Host '[dev-choking] Checking Windows setup prerequisites...'
     Assert-Prerequisites
+    # Disable AC sleep/display timeouts before downloads or Windows servicing.
+    Set-PowerPreferences
+    Disable-FastStartup
     Uninstall-OneDrive
     Install-EnglishDisplayLanguage
     Set-DesktopPreferences
     Set-VSCodeContextMenu -SkipIfMissing
     Set-HardwareClockUtc
-    Set-PowerPreferences
     Set-LanguageAndRegion
     Set-PrinterDefaults
     Set-WordDefaults
