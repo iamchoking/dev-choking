@@ -9,9 +9,7 @@ echo '<dev-choking> apt update / upgrade complete'
 ### 2. install essential apps
 sudo apt install terminator htop gedit -y
 
-sudo add-apt-repository ppa:danielrichter2007/grub-customizer
-sudo apt-get update
-sudo apt-get install grub-customizer -y
+# GRUB Customizer and dual-boot setup live in ../dual-boot/README.md.
 
 echo '<dev-choking> installed essential apps'
 

@@ -35,6 +35,9 @@ We will operate in this directory (`dev-choking/ubuntu`) henceforth
 * configures git
 * installs ```gh``` (git CLI)
 
+For Windows + Ubuntu dual boot, follow [the dedicated dual-boot guide](../dual-boot/README.md).
+GRUB Customizer installation has moved there from `ubuntu-basic.sh`.
+
 ***TODO: pass ```user.name``` and ```user.email``` as arguments***
 
 After this part, close and re-open the terminal (should open ```terminator```)

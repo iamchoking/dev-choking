@@ -3,3 +3,6 @@ Basic Setup and Development Instructions (for self)
 
 Will add important setup instructions as time progresses.
 For anyone watching, follow at your own disgression
+
+* [Ubuntu fresh install](ubuntu/FRESH-INSTALL.md)
+* [Windows + Ubuntu dual boot](dual-boot/README.md)
