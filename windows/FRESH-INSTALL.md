@@ -244,4 +244,9 @@ are reported instead of being treated as successful.
 For defaults on Windows 10, the helper uses the existing Control Panel
 [settings-copy mechanism](https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/automate-regional-language-settings)
 after applying the current user's English UI, Korean input, and regional formats.
+If Windows 10 rejects the copy-only import, the script retries with explicit
+English UI, Korean IME, and regional-format values. If the Control Panel applet
+still refuses to copy settings to the welcome screen and new users, setup keeps
+the current user's settings and reports the manual **intl.cpl > Administrative >
+Copy settings** step.
 The scripts use Windows PowerShell 5.1, which is included in both Windows versions.

@@ -89,32 +89,81 @@ function Set-Windows10PowerPreferences {
     Write-Host '[dev-choking] Plugged in: Best performance; battery: Better battery. Restart to load both preferences.'
 }
 
-function Copy-Windows10InternationalDefaults {
-    # Copy Settings is still part of intl.cpl on Windows 10. Current-user language
-    # and input were already set with International cmdlets; do not reset them here.
-    # https://learn.microsoft.com/troubleshoot/windows-client/setup-upgrade-and-drivers/automate-regional-language-settings
-    $copyXml = @'
+function Invoke-Windows10InternationalImport {
+    param([string]$Xml)
+    $xmlPath = Join-Path ([System.IO.Path]::GetTempPath()) ('dev-choking-region-' + [guid]::NewGuid().ToString('N') + '.xml')
+    try {
+        [System.IO.File]::WriteAllText($xmlPath, $Xml, [System.Text.UTF8Encoding]::new($false))
+        $control = Join-Path ([Environment]::GetFolderPath('System')) 'control.exe'
+        $process = Start-Process -FilePath $control -ArgumentList ('intl.cpl,,/f:"' + $xmlPath + '"') -WindowStyle Hidden -Wait -PassThru
+        return $process.ExitCode
+    } finally {
+        if (Test-Path -LiteralPath $xmlPath) { Remove-Item -LiteralPath $xmlPath -Force }
+    }
+}
+
+function New-Windows10CopyCurrentInternationalXml {
+    return @'
 <gs:GlobalizationServices xmlns:gs="urn:longhornGlobalizationUnattend">
   <gs:UserList>
     <gs:User UserID="Current" CopySettingsToDefaultUserAcct="true" CopySettingsToSystemAcct="true" />
   </gs:UserList>
 </gs:GlobalizationServices>
 '@
-    $xmlPath = Join-Path ([System.IO.Path]::GetTempPath()) ('dev-choking-region-' + [guid]::NewGuid().ToString('N') + '.xml')
-    try {
-        [System.IO.File]::WriteAllText($xmlPath, $copyXml, [System.Text.UTF8Encoding]::new($false))
-        $control = Join-Path ([Environment]::GetFolderPath('System')) 'control.exe'
-        $process = Start-Process -FilePath $control -ArgumentList ('intl.cpl,,/f:"' + $xmlPath + '"') -WindowStyle Hidden -Wait -PassThru
-        if ($process.ExitCode -ne 0) { throw "Copying international defaults failed with exit code $($process.ExitCode)." }
-        # intl.cpl can fail silently. Check representative welcome-screen values.
-        $current = Get-ItemProperty -LiteralPath 'HKCU:\Control Panel\International'
-        $welcome = Get-ItemProperty -LiteralPath 'Registry::HKEY_USERS\.DEFAULT\Control Panel\International'
-        foreach ($name in @('LocaleName', 'sShortDate', 'sTimeFormat', 'iMeasure', 'iPaperSize')) {
-            if ($welcome.$name -ne $current.$name) {
-                throw "Welcome-screen setting $name was not copied. Open intl.cpl > Administrative > Copy settings and copy to the welcome screen and new users, then rerun settings.cmd."
-            }
+}
+
+function New-Windows10ExplicitInternationalXml {
+    param([string]$KoreanTip)
+    # The retry keeps the same supported XML import path, but stops intl.cpl from
+    # having to infer the post-language-change values from the current profile.
+    return @"
+<gs:GlobalizationServices xmlns:gs="urn:longhornGlobalizationUnattend">
+  <gs:UserList>
+    <gs:User UserID="Current" CopySettingsToDefaultUserAcct="true" CopySettingsToSystemAcct="true" />
+  </gs:UserList>
+  <gs:MUILanguagePreferences>
+    <gs:MUILanguage Value="en-US" />
+  </gs:MUILanguagePreferences>
+  <gs:SystemLocale Name="en-US" />
+  <gs:InputPreferences>
+    <gs:InputLanguageID Action="add" ID="$KoreanTip" Default="true" />
+    <gs:InputLanguageID Action="remove" ID="0409:00000409" />
+  </gs:InputPreferences>
+  <gs:UserLocale>
+    <gs:Locale Name="en-GB" SetAsCurrent="true" ResetAllSettings="false">
+      <gs:Win32>
+        <gs:sShortDate>yyyy-MM-dd</gs:sShortDate>
+        <gs:sLongDate>yyyy-MM-dd</gs:sLongDate>
+        <gs:sShortTime>HH:mm</gs:sShortTime>
+        <gs:sTimeFormat>HH:mm:ss</gs:sTimeFormat>
+        <gs:iMeasure>0</gs:iMeasure>
+        <gs:iPaperSize>9</gs:iPaperSize>
+      </gs:Win32>
+    </gs:Locale>
+  </gs:UserLocale>
+</gs:GlobalizationServices>
+"@
+}
+
+function Copy-Windows10InternationalDefaults {
+    param([string]$KoreanTip)
+    # Copy Settings is still part of intl.cpl on Windows 10. Current-user language
+    # and input were already set with International cmdlets; do not reset them here.
+    # https://learn.microsoft.com/troubleshoot/windows-client/setup-upgrade-and-drivers/automate-regional-language-settings
+    $copyExit = Invoke-Windows10InternationalImport -Xml (New-Windows10CopyCurrentInternationalXml)
+    if ($copyExit -ne 0) {
+        Write-Warning "Copy-only international import failed with exit code $copyExit; retrying with explicit Windows 10 settings."
+        $explicitExit = Invoke-Windows10InternationalImport -Xml (New-Windows10ExplicitInternationalXml -KoreanTip $KoreanTip)
+        if ($explicitExit -ne 0) {
+            throw "Copying international defaults failed. Copy-only import exit code: $copyExit; explicit import exit code: $explicitExit."
         }
-    } finally {
-        if (Test-Path -LiteralPath $xmlPath) { Remove-Item -LiteralPath $xmlPath -Force }
+    }
+    # intl.cpl can fail silently. Check representative welcome-screen values.
+    $current = Get-ItemProperty -LiteralPath 'HKCU:\Control Panel\International'
+    $welcome = Get-ItemProperty -LiteralPath 'Registry::HKEY_USERS\.DEFAULT\Control Panel\International'
+    foreach ($name in @('LocaleName', 'sShortDate', 'sTimeFormat', 'iMeasure', 'iPaperSize')) {
+        if ($welcome.$name -ne $current.$name) {
+            throw "Welcome-screen setting $name was not copied."
+        }
     }
 }

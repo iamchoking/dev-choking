@@ -262,12 +262,18 @@ function Set-KoreanOnlyInputProfiles {
 
 function Copy-InternationalDefaults {
     Write-Host '[dev-choking] Copying language, input, and regional settings to the welcome screen and new users...'
-    if ($script:isWindows11) {
-        Copy-Windows11InternationalDefaults
-    } else {
-        Copy-Windows10InternationalDefaults
+    try {
+        if ($script:isWindows11) {
+            Copy-Windows11InternationalDefaults
+        } else {
+            Copy-Windows10InternationalDefaults -KoreanTip $script:koreanTip
+        }
+        Write-Host '[dev-choking] Finished copying international defaults.'
+    } catch {
+        Write-Warning "Welcome-screen and new-user international defaults were not copied: $($_.Exception.Message)"
+        Write-Warning 'Open intl.cpl > Administrative > Copy settings, then copy current settings to the welcome screen/system accounts and new user accounts.'
+        $script:manualSteps.Add('Copy international settings in intl.cpl > Administrative > Copy settings.')
     }
-    Write-Host '[dev-choking] Finished copying international defaults.'
 }
 
 function Set-LanguageAndRegion {
@@ -281,6 +287,7 @@ function Set-LanguageAndRegion {
     Set-WinSystemLocale 'en-US'
     $languages = New-DesiredLanguageList
     $koreanTip = $languages[1].InputMethodTips[0]
+    $script:koreanTip = $koreanTip
     Set-WinUserLanguageList -LanguageList $languages -Force
     Set-WinDefaultInputMethodOverride -InputTip $koreanTip
     # Use one input method across windows instead of remembering one per app.
@@ -377,6 +384,21 @@ function Set-PrinterDefaults {
     }
 }
 
+function Close-WordComObject {
+    param(
+        $ComObject,
+        [ValidateSet('Document', 'Application')][string]$Kind
+    )
+    if ($null -eq $ComObject) { return }
+    $doNotSaveChanges = 0
+    $missing = [Type]::Missing
+    if ($Kind -eq 'Document') {
+        $ComObject.Close([ref]$doNotSaveChanges, [ref]$missing, [ref]$missing)
+    } else {
+        $ComObject.Quit([ref]$doNotSaveChanges, [ref]$missing, [ref]$missing)
+    }
+}
+
 function Set-WordDefaults {
     if (-not [type]::GetTypeFromProgID('Word.Application')) {
         Write-Host '[dev-choking] Word is not installed. Rerun settings.cmd after installing Word to set its template to A4.'
@@ -415,10 +437,10 @@ function Set-WordDefaults {
         $script:manualSteps.Add('In Word, set Layout > Page Setup > Paper > A4 > Set As Default, and set measurement units to centimeters in Options > Advanced.')
     } finally {
         try {
-            if ($null -ne $document) { $document.Close(0) }
+            Close-WordComObject -ComObject $document -Kind Document
         } finally {
             try {
-                if ($null -ne $word) { $word.Quit(0) }
+                Close-WordComObject -ComObject $word -Kind Application
             } finally {
                 foreach ($comObject in @($pageSetup, $document, $normal, $options, $word)) {
                     if ($null -ne $comObject -and [Runtime.InteropServices.Marshal]::IsComObject($comObject)) {
