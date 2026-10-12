@@ -21,7 +21,7 @@ We will operate in this directory (`dev-choking/ubuntu`) henceforth
 
 **WARNING: this bash alias is highly catored to myself.**
 ```
-./user-alias.sh
+./user-alias.sh 
 ```
 
 #### Basic apps / dependencies
@@ -110,10 +110,46 @@ TODO: other distros
 
 ***
 ### 5. Install Accessory Apps
+On **Ubuntu 22.04 or 24.04 LTS (amd64)**, install Wine and KakaoTalk from a
+desktop terminal as your normal user:
+
+```bash
+bash ./apps-optional_amd64.sh
+```
+
+The script enables the matching WineHQ repository and 32-bit dependencies,
+installs WineHQ Stable and Korean fonts, and downloads the Windows installer
+from [Kakao's official download page](https://www.kakaocorp.com/page/service/all).
+Complete the setup wizard with the default installation folder and uncheck
+launching KakaoTalk on its final page. It uses a separate `~/.wine-kakaotalk`
+prefix configured for Windows 10 and prints a launch command when finished.
+It also adds **KakaoTalk** to the application menu and creates a desktop shortcut
+using your configured desktop folder. Both shortcuts use the same Wine prefix.
+To add or recreate the shortcuts for an existing installation:
+
+```bash
+bash ./apps-optional_amd64.sh --create-launcher
+```
+
+If your desktop asks, right-click the shortcut and choose **Allow Launching**.
+Korean UI fonts are mapped to Nanum Gothic inside that prefix. If an existing
+installation shows Korean text as square boxes, repair the fonts without
+reinstalling KakaoTalk:
+
+```bash
+bash ./apps-optional_amd64.sh --repair-korean
+```
+
+Fully quit KakaoTalk from its tray menu, then reopen it to reload the fonts.
+The script saves the original Wine font mappings in
+`~/.wine-kakaotalk/dev-choking-font-substitutes.reg` and the fallback links in
+`~/.wine-kakaotalk/dev-choking-font-links.reg` before changing them.
+KakaoTalk's Windows client runs through Wine; application compatibility can
+change with KakaoTalk updates.
+
 Now is a great time to install other accessory apps such as:
 * Spotify (Ubuntu Software)
 * Clion (If you are planning on using `raisimGymTorch`)
-TODO: shell script for accessory apps
 ***
 ### 6. Installing important applications
 Now, install important apps / API's into your computer
